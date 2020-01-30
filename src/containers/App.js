@@ -3,21 +3,22 @@ import CardList from '../components/CardList';
 import SearchBox from '../components/SearchBox';
 import Scroll from '../components/Scroll';
 import './App.css';
+import localRobots from './robots.js'
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      robots: [],
+      robots: localRobots,
       searchfield: ''
     }
   }
 
   componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/users')
+      fetch('https://jsonplaceholder.typicode.com/users')
       .then(response=> response.json())
-      .then(users => {this.setState({ robots: users})});
-  }
+      .then(users => {this.setState({ robots: users})}).catch(err => console.error('ERR', err));
+    }
 
   onSearchChange = (event) => {
     this.setState({ searchfield: event.target.value })
@@ -28,6 +29,7 @@ class App extends Component {
     const filteredRobots = robots.filter(robot =>{
       return robot.name.toLowerCase().includes(searchfield.toLowerCase());
     })
+    console.log({robots});
     return !robots.length ?
       <h1>Loading</h1> :
       (
