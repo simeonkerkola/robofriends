@@ -1,30 +1,41 @@
-import React, { Component } from 'react';
+import React, { Component,ChangeEvent, } from 'react';
 import CardList from '../components/CardList';
 import SearchBox from '../components/SearchBox';
 import Scroll from '../components/Scroll';
 import './App.css';
-import localRobots from './robots.js'
+import localRobots from './robots.js.js'
 
-class App extends Component {
-  constructor() {
-    super()
+export interface IRobot {
+  name: string,
+  id: number,
+  email: string
+}
+interface IAppProps {}
+interface IAppState {
+  robots: Array<IRobot>
+  searchfield: string
+}
+
+class App extends Component<IAppProps, IAppState> {
+  constructor(props: IAppProps) {
+    super(props)
     this.state = {
       robots: localRobots,
       searchfield: ''
     }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
       fetch('https://jsonplaceholder.typicode.com/users')
       .then(response=> response.json())
       .then(users => {this.setState({ robots: users})}).catch(err => console.error('ERR', err));
     }
 
-  onSearchChange = (event) => {
+  onSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     this.setState({ searchfield: event.target.value })
   }
 
-  render() {
+  render(): JSX.Element {
     const { robots, searchfield } = this.state;
     const filteredRobots = robots.filter(robot =>{
       return robot.name.toLowerCase().includes(searchfield.toLowerCase());
